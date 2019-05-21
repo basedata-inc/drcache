@@ -13,7 +13,9 @@ service drcache {
     rpc Delete (DeleteRequest) returns (Reply) {}
     rpc DeleteAll (DeleteAllRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
-    rpc GetMulti (GetMultiRequest) returns (Reply) {}
+    rpc AddServer (AddServerRequest) returns (Reply) {}
+    rpc DropServer (DropServerRequest) returns (Reply) {}
+    rpc CheckConnection (CheckConnectionRequest) returns (Reply) {}
 }
 
 message Item {
@@ -58,18 +60,23 @@ message DeleteRequest {
     string key = 1;
 }
 
-message DeleteAllRequest {
-}
+message DeleteAllRequest {}
 
 message GetRequest {
     string key = 1;
-}
-
-message GetMultiRequest {
-    repeated string keys = 1;
 }
 
 message Reply {
     string error = 1;
     repeated Item items = 2;
 }
+
+message AddServerRequest {
+    string address = 1;
+}
+
+message DropServerRequest {
+    string server = 1;
+}
+
+message CheckConnectionRequest {}
