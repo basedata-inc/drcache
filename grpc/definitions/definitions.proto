@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package definitions;
+
+service drcache {
+    rpc Add (AddRequest) returns (Reply) {}
+    rpc CompareAndSwap (CompareAndSwapRequest) returns (Reply) {}
+    rpc Decrement (DecrementRequest) returns (Reply) {}
+    rpc Increment (IncrementRequest) returns (Reply) {}
+    rpc Replace (ReplaceRequest) returns (Reply) {}
+    rpc Set (SetRequest) returns (Reply) {}
+    rpc Touch (TouchRequest) returns (Reply) {}
+    rpc Delete (DeleteRequest) returns (Reply) {}
+    rpc DeleteAll (DeleteAllRequest) returns (Reply) {}
+    rpc Get (GetRequest) returns (Reply) {}
+    rpc GetMulti (GetMultiRequest) returns (Reply) {}
+}
+
+message Item {
+    string key = 1;
+    bytes value = 2;
+    int32 lastUpdate = 3;
+    int32 expiration = 4;
+}
+
+message AddRequest {
+    Item item = 1;
+}
+
+message CompareAndSwapRequest {
+    Item item = 1;
+}
+
+message DecrementRequest {
+    string key = 1;
+    int64 delta = 2;
+}
+
+message IncrementRequest {
+    string key = 1;
+    int64 delta = 2;
+}
+
+message ReplaceRequest {
+    Item item = 1;
+}
+
+message SetRequest {
+    Item item = 1;
+}
+
+message TouchRequest {
+    string key = 1;
+    int32 seconds = 2;
+}
+
+message DeleteRequest {
+    string key = 1;
+}
+
+message DeleteAllRequest {
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetMultiRequest {
+    repeated string keys = 1;
+}
+
+message Reply {
+    string error = 1;
+    repeated Item items = 2;
+}
