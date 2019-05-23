@@ -26,7 +26,7 @@ func newNode(id string, replicaId int) *Node {
 	return &Node{
 		Id:        id,
 		ReplicaId: replicaId,
-		HashId:    hashByKeyandId(id, replicaId),
+		HashId:    hashByKeyAndId(id, replicaId),
 	}
 }
 
@@ -60,7 +60,7 @@ func (r *Ring) RemoveNode(id string) error {
 	r.Lock()
 	defer r.Unlock()
 	for i := 0; i < numberOfReplicas; i++ {
-		index := r.search(hashByKeyandId(id, i))
+		index := r.search(hashByKeyAndId(id, i))
 		if index >= r.Nodes.Len() || r.Nodes[index].Id != id {
 			return ErrNodeNotFound
 		}
@@ -99,7 +99,7 @@ type Identity struct {
 	replicaId int
 }
 
-func hashByKeyandId(key string, replicaId int) uint32 {
+func hashByKeyAndId(key string, replicaId int) uint32 {
 	bytes, _ := json.Marshal(&Identity{key, replicaId})
 	return crc32.ChecksumIEEE(bytes)
 }
