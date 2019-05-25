@@ -4,8 +4,12 @@
 package definitions
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -702,4 +706,516 @@ var fileDescriptor_671b7d4d1004a799 = []byte{
 	0x61, 0xa9, 0xf1, 0x11, 0xee, 0xd6, 0x6e, 0x82, 0x3c, 0x35, 0xc1, 0x6d, 0xbc, 0x98, 0xe6, 0x6a,
 	0x5f, 0x3a, 0xe9, 0x5f, 0xcf, 0xe8, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x85, 0x0e, 0x78, 0xf6,
 	0xa0, 0x06, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// DrcacheClient is the client API for Drcache service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type DrcacheClient interface {
+	Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*Reply, error)
+	CompareAndSwap(ctx context.Context, in *CompareAndSwapRequest, opts ...grpc.CallOption) (*Reply, error)
+	Decrement(ctx context.Context, in *DecrementRequest, opts ...grpc.CallOption) (*Reply, error)
+	Increment(ctx context.Context, in *IncrementRequest, opts ...grpc.CallOption) (*Reply, error)
+	Replace(ctx context.Context, in *ReplaceRequest, opts ...grpc.CallOption) (*Reply, error)
+	Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*Reply, error)
+	Touch(ctx context.Context, in *TouchRequest, opts ...grpc.CallOption) (*Reply, error)
+	Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*Reply, error)
+	DeleteAll(ctx context.Context, in *DeleteAllRequest, opts ...grpc.CallOption) (*Reply, error)
+	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Reply, error)
+	AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*Reply, error)
+	DropServer(ctx context.Context, in *DropServerRequest, opts ...grpc.CallOption) (*Reply, error)
+	CheckConnection(ctx context.Context, in *CheckConnectionRequest, opts ...grpc.CallOption) (*Reply, error)
+}
+
+type drcacheClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewDrcacheClient(cc *grpc.ClientConn) DrcacheClient {
+	return &drcacheClient{cc}
+}
+
+func (c *drcacheClient) Add(ctx context.Context, in *AddRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Add", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) CompareAndSwap(ctx context.Context, in *CompareAndSwapRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/CompareAndSwap", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Decrement(ctx context.Context, in *DecrementRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Decrement", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Increment(ctx context.Context, in *IncrementRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Increment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Replace(ctx context.Context, in *ReplaceRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Replace", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Set(ctx context.Context, in *SetRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Set", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Touch(ctx context.Context, in *TouchRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Touch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Delete(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Delete", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) DeleteAll(ctx context.Context, in *DeleteAllRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/DeleteAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/Get", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) AddServer(ctx context.Context, in *AddServerRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/AddServer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) DropServer(ctx context.Context, in *DropServerRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/DropServer", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *drcacheClient) CheckConnection(ctx context.Context, in *CheckConnectionRequest, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
+	err := c.cc.Invoke(ctx, "/definitions.drcache/CheckConnection", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DrcacheServer is the server API for Drcache service.
+type DrcacheServer interface {
+	Add(context.Context, *AddRequest) (*Reply, error)
+	CompareAndSwap(context.Context, *CompareAndSwapRequest) (*Reply, error)
+	Decrement(context.Context, *DecrementRequest) (*Reply, error)
+	Increment(context.Context, *IncrementRequest) (*Reply, error)
+	Replace(context.Context, *ReplaceRequest) (*Reply, error)
+	Set(context.Context, *SetRequest) (*Reply, error)
+	Touch(context.Context, *TouchRequest) (*Reply, error)
+	Delete(context.Context, *DeleteRequest) (*Reply, error)
+	DeleteAll(context.Context, *DeleteAllRequest) (*Reply, error)
+	Get(context.Context, *GetRequest) (*Reply, error)
+	AddServer(context.Context, *AddServerRequest) (*Reply, error)
+	DropServer(context.Context, *DropServerRequest) (*Reply, error)
+	CheckConnection(context.Context, *CheckConnectionRequest) (*Reply, error)
+}
+
+// UnimplementedDrcacheServer can be embedded to have forward compatible implementations.
+type UnimplementedDrcacheServer struct {
+}
+
+func (*UnimplementedDrcacheServer) Add(ctx context.Context, req *AddRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
+}
+func (*UnimplementedDrcacheServer) CompareAndSwap(ctx context.Context, req *CompareAndSwapRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CompareAndSwap not implemented")
+}
+func (*UnimplementedDrcacheServer) Decrement(ctx context.Context, req *DecrementRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Decrement not implemented")
+}
+func (*UnimplementedDrcacheServer) Increment(ctx context.Context, req *IncrementRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Increment not implemented")
+}
+func (*UnimplementedDrcacheServer) Replace(ctx context.Context, req *ReplaceRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Replace not implemented")
+}
+func (*UnimplementedDrcacheServer) Set(ctx context.Context, req *SetRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Set not implemented")
+}
+func (*UnimplementedDrcacheServer) Touch(ctx context.Context, req *TouchRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Touch not implemented")
+}
+func (*UnimplementedDrcacheServer) Delete(ctx context.Context, req *DeleteRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (*UnimplementedDrcacheServer) DeleteAll(ctx context.Context, req *DeleteAllRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAll not implemented")
+}
+func (*UnimplementedDrcacheServer) Get(ctx context.Context, req *GetRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (*UnimplementedDrcacheServer) AddServer(ctx context.Context, req *AddServerRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddServer not implemented")
+}
+func (*UnimplementedDrcacheServer) DropServer(ctx context.Context, req *DropServerRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropServer not implemented")
+}
+func (*UnimplementedDrcacheServer) CheckConnection(ctx context.Context, req *CheckConnectionRequest) (*Reply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckConnection not implemented")
+}
+
+func RegisterDrcacheServer(s *grpc.Server, srv DrcacheServer) {
+	s.RegisterService(&_Drcache_serviceDesc, srv)
+}
+
+func _Drcache_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Add(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Add",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Add(ctx, req.(*AddRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_CompareAndSwap_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompareAndSwapRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).CompareAndSwap(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/CompareAndSwap",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).CompareAndSwap(ctx, req.(*CompareAndSwapRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Decrement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DecrementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Decrement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Decrement",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Decrement(ctx, req.(*DecrementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Increment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IncrementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Increment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Increment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Increment(ctx, req.(*IncrementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Replace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReplaceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Replace(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Replace",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Replace(ctx, req.(*ReplaceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Set(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Set",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Set(ctx, req.(*SetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Touch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TouchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Touch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Touch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Touch(ctx, req.(*TouchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Delete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Delete(ctx, req.(*DeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_DeleteAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).DeleteAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/DeleteAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).DeleteAll(ctx, req.(*DeleteAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/Get",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).Get(ctx, req.(*GetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_AddServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).AddServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/AddServer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).AddServer(ctx, req.(*AddServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_DropServer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropServerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).DropServer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/DropServer",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).DropServer(ctx, req.(*DropServerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Drcache_CheckConnection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckConnectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DrcacheServer).CheckConnection(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/definitions.drcache/CheckConnection",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DrcacheServer).CheckConnection(ctx, req.(*CheckConnectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Drcache_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "definitions.drcache",
+	HandlerType: (*DrcacheServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Add",
+			Handler:    _Drcache_Add_Handler,
+		},
+		{
+			MethodName: "CompareAndSwap",
+			Handler:    _Drcache_CompareAndSwap_Handler,
+		},
+		{
+			MethodName: "Decrement",
+			Handler:    _Drcache_Decrement_Handler,
+		},
+		{
+			MethodName: "Increment",
+			Handler:    _Drcache_Increment_Handler,
+		},
+		{
+			MethodName: "Replace",
+			Handler:    _Drcache_Replace_Handler,
+		},
+		{
+			MethodName: "Set",
+			Handler:    _Drcache_Set_Handler,
+		},
+		{
+			MethodName: "Touch",
+			Handler:    _Drcache_Touch_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Drcache_Delete_Handler,
+		},
+		{
+			MethodName: "DeleteAll",
+			Handler:    _Drcache_DeleteAll_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _Drcache_Get_Handler,
+		},
+		{
+			MethodName: "AddServer",
+			Handler:    _Drcache_AddServer_Handler,
+		},
+		{
+			MethodName: "DropServer",
+			Handler:    _Drcache_DropServer_Handler,
+		},
+		{
+			MethodName: "CheckConnection",
+			Handler:    _Drcache_CheckConnection_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "grpc/definitions/definitions.proto",
 }
