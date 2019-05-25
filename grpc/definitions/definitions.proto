@@ -67,7 +67,7 @@ message GetRequest {
 }
 
 message Reply {
-    string error = 1;
+    string message = 1;
     repeated Item items = 2;
 }
 
