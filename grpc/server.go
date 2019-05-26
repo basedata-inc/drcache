@@ -20,8 +20,13 @@ type Server struct {
 }
 
 func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
+	key := in.Item.Key
+	value := in.Item.Value
+	expiration := in.Item.Expiration
 	log.Printf("Received: %v", in.Item.Key)
-	return &pb.Reply{Message: "ok"}, nil
+
+	err := s.lru.AddItem(key, value, expiration)
+	return &pb.Reply{Message: "ok"}, err
 }
 
 func (s *Server) CompareAndSwap(ctx context.Context, in *pb.CompareAndSwapRequest) (*pb.Reply, error) {
@@ -93,7 +98,7 @@ func NewServer(ipList []string, maxSize int64, localAddress string) *Server {
 }
 
 //----------------------------------------------------------
-// With consistent hashing check if key belogs to you, if so add to local cache. Otherwise send to other server with client
+// With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
 //----------------------------------------------------------
 func (s *Server) AddItem(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
 
