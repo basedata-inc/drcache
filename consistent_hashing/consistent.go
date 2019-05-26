@@ -73,8 +73,8 @@ func (r *Ring) RemoveNode(id string) error {
 	return nil
 }
 
-func (r *Ring) Get(id string) string {
-	i := r.search(hashByKey(id))
+func (r *Ring) Get(key string) string {
+	i := r.search(hashByKey(key))
 	if i >= r.Nodes.Len() {
 		i = 0
 	}
