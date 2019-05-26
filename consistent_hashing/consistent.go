@@ -78,7 +78,6 @@ func (r *Ring) Get(key string) string {
 	if i >= r.Nodes.Len() {
 		i = 0
 	}
-
 	return r.Nodes[i].Id
 }
 

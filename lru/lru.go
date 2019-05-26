@@ -47,7 +47,10 @@ func GetLRLUCache(maxSize int64) *LRU {
 func (lru *LRU) AddItem(key string, val []byte, expiration int64) error {
 	lru.Lock()
 	defer lru.Unlock()
-
+	_, exists := lru.GetItem(key)
+	if exists {
+		return errors.New("Given key already exists")
+	}
 	i := &item{key: key, value: val, next: nil, prev: nil, expiration: expiration}
 	isize := int64(unsafe.Sizeof(i))
 	if lru.size+isize < lru.maxSize {
