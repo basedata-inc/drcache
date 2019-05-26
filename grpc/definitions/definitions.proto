@@ -21,8 +21,8 @@ service drcache {
 message Item {
     string key = 1;
     bytes value = 2;
-    int64 lastUpdate = 3;
-    int64 expiration = 4;
+    uint32 lastUpdate = 3;
+    uint32 expiration = 4;
 }
 
 message AddRequest {
