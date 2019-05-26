@@ -7,10 +7,8 @@ import (
 	"errors"
 	lru "github.com/coocood/freecache"
 	"google.golang.org/grpc/status"
-	"sync"
-
-	utils "drcache"
 	"log"
+	"sync"
 )
 
 var cacheMissError = errors.New("Key does not exist.")
