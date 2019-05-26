@@ -4,8 +4,6 @@ package definitions;
 
 service drcache {
     rpc Add (AddRequest) returns (Reply) {}
-    rpc Decrement (DecrementRequest) returns (Reply) {}
-    rpc Increment (IncrementRequest) returns (Reply) {}
     rpc Set (SetRequest) returns (Reply) {}
     rpc Touch (TouchRequest) returns (Reply) {}
     rpc Delete (DeleteRequest) returns (Reply) {}
@@ -13,7 +11,6 @@ service drcache {
     rpc Get (GetRequest) returns (Reply) {}
     rpc AddServer (AddServerRequest) returns (Reply) {}
     rpc DropServer (DropServerRequest) returns (Reply) {}
-    rpc CheckConnection (CheckConnectionRequest) returns (Reply) {}
 }
 
 message Item {
@@ -28,20 +25,6 @@ message AddRequest {
 }
 
 message CompareAndSwapRequest {
-    Item item = 1;
-}
-
-message DecrementRequest {
-    string key = 1;
-    int64 delta = 2;
-}
-
-message IncrementRequest {
-    string key = 1;
-    int64 delta = 2;
-}
-
-message ReplaceRequest {
     Item item = 1;
 }
 
@@ -76,5 +59,3 @@ message AddServerRequest {
 message DropServerRequest {
     string server = 1;
 }
-
-message CheckConnectionRequest {}

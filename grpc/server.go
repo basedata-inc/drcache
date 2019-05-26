@@ -51,33 +51,6 @@ func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) 
 }
 
 /* With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
-If entry does not exist, return error.
-If exists decrements the value by delta
-*/
-func (s *Server) Decrement(ctx context.Context, in *pb.DecrementRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", in.Key)
-	return &pb.Reply{Message: "ok"}, nil
-}
-
-/* With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
-If entry does not exist, return error.
-If exists increments the value by delta
-*/
-func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Reply, error) {
-
-	/*key := in.Keyhttps://godoc.org/github.com/coocood/freecache
-	delta := in.Delta
-	log.Printf("Received: %v", in.Key)
-	retval := s.lru.IncrementItem(key, delta)
-	if !retval {
-		return &pb.Reply{Message: "NOT OK!"}, cacheMissError
-	}
-	return &pb.Reply{Message: "ok"}, nil
-	*/
-	return nil, nil
-}
-
-/* With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
 If entry does not exist, adds the entry.
 If exists updates the entry's value.
 */
@@ -148,16 +121,13 @@ func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) 
 }
 
 func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Reply, error) {
-	panic("implement me")
+	s.Lock()
+	defer s.Unlock()
 }
 
 func (s *Server) DropServer(ctx context.Context, in *pb.DropServerRequest) (*pb.Reply, error) {
 	s.dropAndReInit(in.Server)
 	return nil, nil
-}
-
-func (s *Server) CheckConnection(ctx context.Context, in *pb.CheckConnectionRequest) (*pb.Reply, error) {
-	panic("implement me")
 }
 
 func NewServer(ipList map[string]struct{}, maxSize int, localAddress string) *Server {
