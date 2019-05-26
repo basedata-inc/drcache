@@ -19,6 +19,18 @@ type item struct {
 	expiration int64 // epoch nanosecond
 }
 
+func (i *item) GetKey() string {
+	return i.key
+}
+
+func (i *item) GetValue() []byte {
+	return i.value
+}
+
+func (i *item) GetExpiration() int64 {
+	return i.expiration
+}
+
 type LRU struct {
 	head  *item
 	tail  *item

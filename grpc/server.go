@@ -4,7 +4,7 @@ import (
 	"context"
 	"drcache/consistent_hashing"
 	pb "drcache/grpc/definitions"
-	"drcache/lru"
+	lru "drcache/lru"
 	"errors"
 	"log"
 )
@@ -81,7 +81,11 @@ func (s *Server) DeleteAll(ctx context.Context, in *pb.DeleteAllRequest) (*pb.Re
 }
 
 func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) {
-	panic("implement me")
+	i, ok := s.lru.GetItem(in.Key)
+	if ok {
+		return &pb.Reply{Message: "ok", Item: &pb.Item{Key: i.GetKey(), Value: i.GetValue(), Expiration: i.GetExpiration()}}, nil
+	}
+	return nil, nil
 }
 
 func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Reply, error) {
