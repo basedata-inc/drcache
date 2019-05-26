@@ -16,11 +16,11 @@ type Client struct {
 var client *Client
 var once sync.Once
 
-func NewClient(ServerList []string, self string) *Client {
+func NewClient(ServerList map[string]struct{}, self string) *Client {
 
 	once.Do(func() { // <-- atomic, does not allow repeating
 		clients := make(map[string]pb.DrcacheClient)
-		for _, address := range ServerList {
+		for address := range ServerList {
 			if address == self {
 				continue
 			}
@@ -46,6 +46,10 @@ func (c *Client) GetItem(address string, request *pb.GetRequest) (*pb.Reply, err
 
 func (c *Client) SetItem(address string, request *pb.SetRequest) (*pb.Reply, error) {
 	return c.Clients[address].Set(context.Background(), request)
+}
+
+func (c *Client) DropServer(address string) (*pb.Reply, error) {
+	return c.Clients[address].DropServer(context.Background(), &pb.DropServerRequest{Server: address})
 }
 
 func (c *Client) DeleteItem(address string, request *pb.DeleteRequest) (*pb.Reply, error) {

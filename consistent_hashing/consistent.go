@@ -10,7 +10,7 @@ import (
 
 var ErrNodeNotFound = errors.New("node not found")
 
-const numberOfReplicas = 100
+const numberOfReplicas = 10
 
 //----------------------------------------------------------
 // Node
@@ -26,8 +26,7 @@ func newNode(id string, replicaId int) *Node {
 	return &Node{
 		Id:        id,
 		ReplicaId: replicaId,
-		HashId:    hashByKeyAndId(id, replicaId),
-	}
+		HashId:    hashByKeyAndId(id, replicaId)}
 }
 
 type Nodes []*Node
@@ -41,9 +40,9 @@ type Ring struct {
 	sync.Mutex
 }
 
-func NewRing(serverList []string) *Ring {
+func NewRing(serverList map[string]struct{}) *Ring {
 	ring := &Ring{Nodes: Nodes{}}
-	for _, address := range serverList {
+	for address := range serverList {
 		ring.AddNode(address)
 	}
 	return ring
@@ -98,8 +97,8 @@ func (n Nodes) Less(i, j int) bool { return n[i].HashId < n[j].HashId }
 // Helpers
 //----------------------------------------------------------
 type Identity struct {
-	key       string
-	replicaId int
+	Key       string
+	ReplicaId int
 }
 
 func hashByKeyAndId(key string, replicaId int) uint32 {

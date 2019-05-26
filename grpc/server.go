@@ -6,6 +6,8 @@ import (
 	pb "drcache/grpc/definitions"
 	"errors"
 	lru "github.com/coocood/freecache"
+	"google.golang.org/grpc/status"
+	"sync"
 
 	"log"
 )
@@ -15,9 +17,10 @@ var cacheMissError = errors.New("Key does not exist.")
 type Server struct {
 	lru         *lru.Cache
 	ch          *consistent_hashing.Ring
-	serverList  []string
+	serverList  map[string]struct{} // set of servers
 	selfAddress string
 	client      *Client
+	sync.Mutex
 }
 
 /* With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
@@ -32,14 +35,18 @@ func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) 
 	nodeAddress := s.ch.Get(key)
 	if nodeAddress == s.selfAddress {
 		getval, _ := s.lru.Get([]byte(key))
-		if getval == nil {
+		if getval != nil {
 			return &pb.Reply{Message: "Key already exists."}, nil
 		} else {
 			err := s.lru.Set([]byte(key), value, int(expiration))
 			return &pb.Reply{Message: "ok"}, err
 		}
 	} else {
-		return s.client.AddItem(nodeAddress, in)
+		reply, err := s.client.AddItem(nodeAddress, in)
+		if status.Code(err) == 14 { // Connection Error server is down
+			s.dropAndReInit(nodeAddress)
+		}
+		return reply, err
 	}
 }
 
@@ -84,7 +91,11 @@ func (s *Server) Set(ctx context.Context, in *pb.SetRequest) (*pb.Reply, error) 
 		err := s.lru.Set([]byte(key), value, int(expiration))
 		return &pb.Reply{Message: "ok"}, err
 	} else {
-		return s.client.SetItem(nodeAddress, in)
+		reply, err := s.client.SetItem(nodeAddress, in)
+		if status.Code(err) == 14 { // Connection Error server is down
+			s.dropAndReInit(nodeAddress)
+		}
+		return reply, err
 	}
 }
 
@@ -128,7 +139,11 @@ func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) 
 		}
 		return nil, err
 	} else {
-		return s.client.GetItem(nodeAddress, in)
+		reply, err := s.client.GetItem(nodeAddress, in)
+		if status.Code(err) == 14 { // Connection Error server is down
+			s.dropAndReInit(nodeAddress)
+		}
+		return reply, err
 	}
 }
 
@@ -137,15 +152,28 @@ func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Re
 }
 
 func (s *Server) DropServer(ctx context.Context, in *pb.DropServerRequest) (*pb.Reply, error) {
-	panic("implement me")
+	s.dropAndReInit(in.Server)
+	return nil, nil
 }
 
 func (s *Server) CheckConnection(ctx context.Context, in *pb.CheckConnectionRequest) (*pb.Reply, error) {
 	panic("implement me")
 }
 
-func NewServer(ipList []string, maxSize int, localAddress string) *Server {
+func NewServer(ipList map[string]struct{}, maxSize int, localAddress string) *Server {
 	cache := lru.NewCache(maxSize)
 	ch := consistent_hashing.NewRing(ipList)
 	return &Server{lru: cache, ch: ch, serverList: ipList, selfAddress: localAddress, client: NewClient(ipList, localAddress)}
+}
+
+func (s *Server) dropAndReInit(deadNode string) {
+	s.Lock()
+	defer s.Unlock()
+	delete(s.serverList, deadNode)
+	s.ch = consistent_hashing.NewRing(s.serverList)
+	for address, _ := range s.serverList {
+		if address != s.selfAddress {
+			go s.client.DropServer(address)
+		}
+	}
 }

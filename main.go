@@ -6,17 +6,15 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
-)
-
-const (
-	self = "localhost:50051"
+	"os"
 )
 
 var (
-	allServers = []string{"localhost:50051", "localhost:50052"}
+	allServers = map[string]struct{}{"localhost:50051": {}, "localhost:50052": {}}
 )
 
 func main() {
+	self := os.Args[1]
 	lis, err := net.Listen("tcp", self)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
