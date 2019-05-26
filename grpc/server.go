@@ -84,7 +84,7 @@ func (s *Server) Set(ctx context.Context, in *pb.SetRequest) (*pb.Reply, error) 
 		err := s.lru.Set([]byte(key), value, int(expiration))
 		return &pb.Reply{Message: "ok"}, err
 	} else {
-		return s.client.AddItem(nodeAddress, in)
+		return s.client.SetItem(nodeAddress, in)
 	}
 }
 

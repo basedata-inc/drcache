@@ -43,3 +43,7 @@ func (c *Client) AddItem(address string, request *pb.AddRequest) (*pb.Reply, err
 func (c *Client) GetItem(address string, request *pb.GetRequest) (*pb.Reply, error) {
 	return c.Clients[address].Get(context.Background(), request)
 }
+
+func (c *Client) SetItem(address string, request *pb.SetRequest) (*pb.Reply, error) {
+	return c.Clients[address].Set(context.Background(), request)
+}
