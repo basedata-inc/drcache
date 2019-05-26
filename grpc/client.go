@@ -36,6 +36,10 @@ func NewClient(ServerList map[string]struct{}, self string) *Client {
 	return client
 }
 
+func (c *Client) GetServers(address string) (*pb.ServerList, error) {
+	return c.Clients[address].GetServers(context.Background(), &pb.GetServersRequest{})
+}
+
 func (c *Client) AddItem(address string, request *pb.AddRequest) (*pb.Reply, error) {
 	return c.Clients[address].Add(context.Background(), request)
 }

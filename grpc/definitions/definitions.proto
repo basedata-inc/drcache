@@ -9,6 +9,7 @@ service drcache {
     rpc DeleteAll (DeleteAllRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
     rpc AddServer (AddServerRequest) returns (Reply) {}
+    rpc GetServers (GetServersRequest) returns (ServerList) {}
     rpc DropServer (DropServerRequest) returns (Reply) {}
 }
 
@@ -52,4 +53,11 @@ message AddServerRequest {
 
 message DropServerRequest {
     string server = 1;
+}
+
+message GetServersRequest {
+}
+
+message ServerList {
+    repeated string servers = 1 ;
 }

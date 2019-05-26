@@ -117,6 +117,31 @@ func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) 
 func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Reply, error) {
 	s.Lock()
 	defer s.Unlock()
+	s.serverList[in.Address] = struct{}{}
+	s.ch = consistent_hashing.NewRing(s.serverList)
+	iterator := s.lru.NewIterator()
+	item := iterator.Next()
+	for item != nil {
+		go func() {
+			newNode := s.ch.Get(string(item.Key))
+			if newNode != s.selfAddress {
+				_, err := s.client.AddItem(newNode, &pb.AddRequest{Item: &pb.Item{Key: string(item.Key), Value: item.Value}})
+				if err == nil {
+					s.lru.Del(item.Key)
+				}
+			}
+		}()
+		item = iterator.Next()
+	}
+	return nil, nil
+}
+
+func (s *Server) GetServers(ctx context.Context, in *pb.AddServerRequest) (*pb.ServerList, error) {
+	var list []string
+	for address := range s.serverList {
+		list = append(list, address)
+	}
+	return &pb.ServerList{Servers: list}, nil
 }
 
 func (s *Server) DropServer(ctx context.Context, in *pb.DropServerRequest) (*pb.Reply, error) {
