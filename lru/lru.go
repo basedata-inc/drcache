@@ -41,7 +41,7 @@ func (lru *LRU) AddItem(key string, val []byte, expiration int64) error {
 	if lru.size+isize < lru.maxSize {
 		lru.RemoveExpiredItems()
 	}
-	for lru.size+isize < lru.maxSize {
+	for lru.tail != nil && lru.size+isize < lru.maxSize {
 		ok := lru.RemoveFromTail()
 		if !ok {
 			return ErrHugeItem
