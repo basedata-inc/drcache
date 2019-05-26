@@ -41,8 +41,12 @@ type Ring struct {
 	sync.Mutex
 }
 
-func NewRing() *Ring {
-	return &Ring{Nodes: Nodes{}}
+func NewRing(serverList []string) *Ring {
+	ring := &Ring{Nodes: Nodes{}}
+	for _, address := range serverList {
+		ring.AddNode(address)
+	}
+	return ring
 }
 
 func (r *Ring) AddNode(id string) {
