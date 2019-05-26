@@ -71,7 +71,16 @@ func (lru *LRU) GetItem(key string) (*item, bool) {
 		lru.RemoveItem(i.key)
 		return nil, false
 	}
+}
 
+func (lru *LRU) fetchItem(key string) (*item, bool) {
+	i, ok := lru.table[key]
+	if i.expiration > time.Now().UnixNano() {
+		return i, ok
+	} else {
+		lru.RemoveItem(i.key)
+		return nil, false
+	}
 }
 
 func (lru *LRU) RemoveItem(key string) bool {
@@ -99,7 +108,7 @@ func (lru *LRU) MoveToHead(key string) bool {
 	lru.Lock()
 	defer lru.Unlock()
 
-	i, ok := lru.GetItem(key)
+	i, ok := lru.fetchItem(key)
 	if !ok {
 		return false
 	}
