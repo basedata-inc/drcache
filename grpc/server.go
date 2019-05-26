@@ -45,7 +45,8 @@ func (s *Server) Decrement(ctx context.Context, in *pb.DecrementRequest) (*pb.Re
 }
 
 func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Reply, error) {
-	key := in.Key
+
+	/*key := in.Keyhttps://godoc.org/github.com/coocood/freecache
 	delta := in.Delta
 	log.Printf("Received: %v", in.Key)
 	retval := s.lru.IncrementItem(key, delta)
@@ -53,6 +54,8 @@ func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Re
 		return &pb.Reply{Message: "NOT OK!"}, cacheMissError
 	}
 	return &pb.Reply{Message: "ok"}, nil
+	*/
+	return nil, nil
 }
 
 func (s *Server) Replace(ctx context.Context, in *pb.ReplaceRequest) (*pb.Reply, error) {
@@ -83,11 +86,11 @@ func (s *Server) DeleteAll(ctx context.Context, in *pb.DeleteAllRequest) (*pb.Re
 func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) {
 	nodeAddress := s.ch.Get(in.Key)
 	if nodeAddress == s.selfAddress {
-		i, ok := s.lru.GetItem(in.Key)
-		if ok {
-			return &pb.Reply{Message: "ok", Item: &pb.Item{Key: i.GetKey(), Value: i.GetValue(), Expiration: i.GetExpiration()}}, nil
+		val, exp, err := s.lru.GetWithExpiration([]byte(in.Key))
+		if err == nil {
+			return &pb.Reply{Message: "ok", Item: &pb.Item{Key: in.Key, Value: val, Expiration: exp}}, nil
 		}
-		return nil, nil
+		return nil, err
 	} else {
 		return s.client.getItem(nodeAddress, in)
 	}
