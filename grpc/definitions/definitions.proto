@@ -4,10 +4,8 @@ package definitions;
 
 service drcache {
     rpc Add (AddRequest) returns (Reply) {}
-    rpc CompareAndSwap (CompareAndSwapRequest) returns (Reply) {}
     rpc Decrement (DecrementRequest) returns (Reply) {}
     rpc Increment (IncrementRequest) returns (Reply) {}
-    rpc Replace (ReplaceRequest) returns (Reply) {}
     rpc Set (SetRequest) returns (Reply) {}
     rpc Touch (TouchRequest) returns (Reply) {}
     rpc Delete (DeleteRequest) returns (Reply) {}

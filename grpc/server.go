@@ -34,17 +34,11 @@ func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) 
 	}
 }
 
-func (s *Server) CompareAndSwap(ctx context.Context, in *pb.CompareAndSwapRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", in.Item.Key)
-	return &pb.Reply{Message: "ok"}, nil
-}
-
 func (s *Server) Decrement(ctx context.Context, in *pb.DecrementRequest) (*pb.Reply, error) {
 	log.Printf("Received: %v", in.Key)
 	return &pb.Reply{Message: "ok"}, nil
 }
 
-/*
 func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Reply, error) {
 
 	/*key := in.Keyhttps://godoc.org/github.com/coocood/freecache
@@ -55,13 +49,8 @@ func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Re
 		return &pb.Reply{Message: "NOT OK!"}, cacheMissError
 	}
 	return &pb.Reply{Message: "ok"}, nil
-
+	*/
 	return nil, nil
-}
-*/
-func (s *Server) Replace(ctx context.Context, in *pb.ReplaceRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", in.Item.Key)
-	return &pb.Reply{Message: "ok"}, nil
 }
 
 func (s *Server) Set(ctx context.Context, in *pb.SetRequest) (*pb.Reply, error) {
