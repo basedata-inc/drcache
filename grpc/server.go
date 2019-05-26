@@ -13,6 +13,7 @@ type Server struct {
 	ch          *consistent_hashing.Ring
 	serverList  []string
 	selfAddress string
+	client      *Client
 }
 
 func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
@@ -79,7 +80,7 @@ func (s *Server) CheckConnection(ctx context.Context, in *pb.CheckConnectionRequ
 func NewServer(ipList []string, maxSize int64, localAddress string) *Server {
 	cache := lru.GetLRLUCache(maxSize)
 	ch := consistent_hashing.NewRing(ipList)
-	return &Server{lru: cache, ch: ch, serverList: ipList, selfAddress: localAddress}
+	return &Server{lru: cache, ch: ch, serverList: ipList, selfAddress: localAddress, client: NewClient(ipList, localAddress)}
 }
 
 //----------------------------------------------------------
