@@ -1,7 +1,9 @@
 package lru
 
 import (
+	"encoding/binary"
 	"errors"
+	"log"
 	"sync"
 	"time"
 	"unsafe"
@@ -83,6 +85,23 @@ func (lru *LRU) fetchItem(key string) (*item, bool) {
 	}
 }
 
+/*
+updates item's value by given key and value
+returns true when successful
+returns false when key does not exist in the table
+*/
+func (lru *LRU) UpdateItemValue(key string, value []byte) bool {
+	lru.Lock()
+	defer lru.Unlock()
+	item, ok := lru.GetItem(key)
+	if ok {
+		item.value = value
+	} else {
+		log.Printf("Invalid key.")
+	}
+	return ok
+}
+
 func (lru *LRU) RemoveItem(key string) bool {
 	lru.Lock()
 	defer lru.Unlock()
@@ -139,4 +158,30 @@ func (lru *LRU) RemoveExpiredItems() {
 		}
 	}
 	return
+}
+
+func (lru *LRU) IncrementItem(key string, delta int64) bool {
+	lru.Lock()
+	defer lru.Unlock()
+	item, itemExists := lru.GetItem(key)
+	if !itemExists {
+		log.Printf("Requested key %v does not exist.", key)
+		return false
+	}
+	intval := ByteArray2Int64(item.value)
+	intval += delta
+	value := Int64ToByteArray(intval)
+	item.value = value
+	return true
+}
+
+func ByteArray2Int64(buffer []byte) int64 {
+	num, _ := binary.Varint(buffer)
+	return num
+}
+
+func Int64ToByteArray(num int64) []byte {
+	buf := make([]byte, binary.MaxVarintLen64)
+	n := binary.PutVarint(buf, num)
+	return buf[:n]
 }

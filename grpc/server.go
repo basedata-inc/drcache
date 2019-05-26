@@ -5,8 +5,11 @@ import (
 	"drcache/consistent_hashing"
 	pb "drcache/grpc/definitions"
 	"drcache/lru"
+	"errors"
 	"log"
 )
+
+var cacheMissError = errors.New("Key does not exist.")
 
 type Server struct {
 	lru         *lru.LRU
@@ -32,7 +35,13 @@ func (s *Server) Decrement(ctx context.Context, in *pb.DecrementRequest) (*pb.Re
 }
 
 func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Reply, error) {
+	key := in.Key
+	delta := in.Delta
 	log.Printf("Received: %v", in.Key)
+	retval := s.lru.IncrementItem(key, delta)
+	if !retval {
+		return &pb.Reply{Message: "NOT OK!"}, cacheMissError
+	}
 	return &pb.Reply{Message: "ok"}, nil
 }
 
@@ -86,3 +95,8 @@ func NewServer(ipList []string, maxSize int64, localAddress string) *Server {
 //----------------------------------------------------------
 // With consistent hashing check if key belogs to you, if so add to local cache. Otherwise send to other server with client
 //----------------------------------------------------------
+func (s *Server) AddItem(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
+
+	log.Printf("Received: %v", in.Item.Key)
+	return &pb.Reply{Message: "ok"}, nil
+}
