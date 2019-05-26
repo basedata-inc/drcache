@@ -68,7 +68,7 @@ message GetRequest {
 
 message Reply {
     string message = 1;
-    repeated Item items = 2;
+    Item item = 2;
 }
 
 message AddServerRequest {
