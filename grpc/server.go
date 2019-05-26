@@ -27,7 +27,7 @@ func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) 
 	expiration := in.Item.Expiration
 	nodeAddress := s.ch.Get(key)
 	if nodeAddress == s.selfAddress {
-		err := s.lru.AddItem(key, value, expiration)
+		err := s.lru.Set([]byte(key), value, int(expiration))
 		return &pb.Reply{Message: "ok"}, err
 	} else {
 		return s.client.AddItem(nodeAddress, in)
@@ -44,6 +44,7 @@ func (s *Server) Decrement(ctx context.Context, in *pb.DecrementRequest) (*pb.Re
 	return &pb.Reply{Message: "ok"}, nil
 }
 
+/*
 func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Reply, error) {
 
 	/*key := in.Keyhttps://godoc.org/github.com/coocood/freecache
@@ -54,10 +55,10 @@ func (s *Server) Increment(ctx context.Context, in *pb.IncrementRequest) (*pb.Re
 		return &pb.Reply{Message: "NOT OK!"}, cacheMissError
 	}
 	return &pb.Reply{Message: "ok"}, nil
-	*/
+
 	return nil, nil
 }
-
+*/
 func (s *Server) Replace(ctx context.Context, in *pb.ReplaceRequest) (*pb.Reply, error) {
 	log.Printf("Received: %v", in.Item.Key)
 	return &pb.Reply{Message: "ok"}, nil
