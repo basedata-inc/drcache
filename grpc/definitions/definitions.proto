@@ -5,7 +5,6 @@ package definitions;
 service drcache {
     rpc Add (AddRequest) returns (Reply) {}
     rpc Set (SetRequest) returns (Reply) {}
-    rpc Touch (TouchRequest) returns (Reply) {}
     rpc Delete (DeleteRequest) returns (Reply) {}
     rpc DeleteAll (DeleteAllRequest) returns (Reply) {}
     rpc Get (GetRequest) returns (Reply) {}
@@ -30,11 +29,6 @@ message CompareAndSwapRequest {
 
 message SetRequest {
     Item item = 1;
-}
-
-message TouchRequest {
-    string key = 1;
-    int32 seconds = 2;
 }
 
 message DeleteRequest {

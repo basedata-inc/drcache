@@ -73,11 +73,6 @@ func (s *Server) Set(ctx context.Context, in *pb.SetRequest) (*pb.Reply, error) 
 	}
 }
 
-func (s *Server) Touch(ctx context.Context, in *pb.TouchRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", in.Key)
-	return &pb.Reply{Message: "ok"}, nil
-}
-
 /* With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
 If entry does not exist, return error.
 If exists deletes the entry
