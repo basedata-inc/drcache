@@ -19,14 +19,19 @@ type Server struct {
 	client      *Client
 }
 
+// With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
 func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
 	key := in.Item.Key
+	log.Printf("Received: %v", key)
 	value := in.Item.Value
 	expiration := in.Item.Expiration
-	log.Printf("Received: %v", in.Item.Key)
-
-	err := s.lru.AddItem(key, value, expiration)
-	return &pb.Reply{Message: "ok"}, err
+	node_address := s.ch.Get(key)
+	if node_address == s.selfAddress {
+		err := s.lru.AddItem(key, value, expiration)
+		return &pb.Reply{Message: "ok"}, err
+	} else {
+		return s.client.AddItem(node_address, in)
+	}
 }
 
 func (s *Server) CompareAndSwap(ctx context.Context, in *pb.CompareAndSwapRequest) (*pb.Reply, error) {
@@ -95,13 +100,4 @@ func NewServer(ipList []string, maxSize int64, localAddress string) *Server {
 	cache := lru.GetLRLUCache(maxSize)
 	ch := consistent_hashing.NewRing(ipList)
 	return &Server{lru: cache, ch: ch, serverList: ipList, selfAddress: localAddress, client: NewClient(ipList, localAddress)}
-}
-
-//----------------------------------------------------------
-// With consistent hashing check if key belongs to you, if so add to local cache. Otherwise send to other server with client
-//----------------------------------------------------------
-func (s *Server) AddItem(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) {
-
-	log.Printf("Received: %v", in.Item.Key)
-	return &pb.Reply{Message: "ok"}, nil
 }
