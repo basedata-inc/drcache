@@ -4,15 +4,15 @@ import (
 	"context"
 	"drcache/consistent_hashing"
 	pb "drcache/grpc/definitions"
-	lru "drcache/lru"
 	"errors"
+	lru "github.com/coocood/freecache"
 	"log"
 )
 
 var cacheMissError = errors.New("Key does not exist.")
 
 type Server struct {
-	lru         *lru.LRU
+	lru         *lru.Cache
 	ch          *consistent_hashing.Ring
 	serverList  []string
 	selfAddress string
@@ -105,8 +105,8 @@ func (s *Server) CheckConnection(ctx context.Context, in *pb.CheckConnectionRequ
 	panic("implement me")
 }
 
-func NewServer(ipList []string, maxSize int64, localAddress string) *Server {
-	cache := lru.GetLRLUCache(maxSize)
+func NewServer(ipList []string, maxSize int, localAddress string) *Server {
+	cache := lru.NewCache(maxSize)
 	ch := consistent_hashing.NewRing(ipList)
 	return &Server{lru: cache, ch: ch, serverList: ipList, selfAddress: localAddress, client: NewClient(ipList, localAddress)}
 }

@@ -45,12 +45,13 @@ func GetLRLUCache(maxSize int64) *LRU {
 }
 
 func (lru *LRU) AddItem(key string, val []byte, expiration int64) error {
-	lru.Lock()
-	defer lru.Unlock()
+
 	_, exists := lru.GetItem(key)
+
 	if exists {
 		return errors.New("Given key already exists")
 	}
+
 	i := &item{key: key, value: val, next: nil, prev: nil, expiration: expiration}
 	isize := int64(unsafe.Sizeof(i))
 	if lru.size+isize < lru.maxSize {
@@ -81,6 +82,9 @@ func (lru *LRU) AddItem(key string, val []byte, expiration int64) error {
 
 func (lru *LRU) GetItem(key string) (*item, bool) {
 	i, ok := lru.table[key]
+	if i == nil {
+		return nil, false
+	}
 	if i.expiration > time.Now().UnixNano() {
 		lru.MoveToHead(i.key)
 		return i, ok
@@ -106,8 +110,7 @@ returns true when successful
 returns false when key does not exist in the table
 */
 func (lru *LRU) UpdateItemValue(key string, value []byte) bool {
-	lru.Lock()
-	defer lru.Unlock()
+
 	item, ok := lru.GetItem(key)
 	if ok {
 		item.value = value
@@ -118,8 +121,6 @@ func (lru *LRU) UpdateItemValue(key string, value []byte) bool {
 }
 
 func (lru *LRU) RemoveItem(key string) bool {
-	lru.Lock()
-	defer lru.Unlock()
 
 	i, ok := lru.GetItem(key)
 	if !ok {
@@ -139,8 +140,6 @@ func (lru *LRU) RemoveItem(key string) bool {
 }
 
 func (lru *LRU) MoveToHead(key string) bool {
-	lru.Lock()
-	defer lru.Unlock()
 
 	i, ok := lru.fetchItem(key)
 	if !ok {
@@ -176,8 +175,7 @@ func (lru *LRU) RemoveExpiredItems() {
 }
 
 func (lru *LRU) IncrementItem(key string, delta int64) bool {
-	lru.Lock()
-	defer lru.Unlock()
+
 	item, itemExists := lru.GetItem(key)
 	if !itemExists {
 		log.Printf("Requested key %v does not exist.", key)
