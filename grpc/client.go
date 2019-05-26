@@ -39,3 +39,7 @@ func NewClient(ServerList []string, self string) *Client {
 func (c *Client) AddItem(address string, request *pb.AddRequest) (*pb.Reply, error) {
 	return c.Clients[address].Add(context.Background(), request)
 }
+
+func (c *Client) getItem(address string, request *pb.GetRequest) (*pb.Reply, error) {
+	return c.Clients[address].Get(context.Background(), request)
+}

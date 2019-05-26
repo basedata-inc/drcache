@@ -25,12 +25,12 @@ func (s *Server) Add(ctx context.Context, in *pb.AddRequest) (*pb.Reply, error) 
 	log.Printf("Received: %v", key)
 	value := in.Item.Value
 	expiration := in.Item.Expiration
-	node_address := s.ch.Get(key)
-	if node_address == s.selfAddress {
+	nodeAddress := s.ch.Get(key)
+	if nodeAddress == s.selfAddress {
 		err := s.lru.AddItem(key, value, expiration)
 		return &pb.Reply{Message: "ok"}, err
 	} else {
-		return s.client.AddItem(node_address, in)
+		return s.client.AddItem(nodeAddress, in)
 	}
 }
 
@@ -81,11 +81,16 @@ func (s *Server) DeleteAll(ctx context.Context, in *pb.DeleteAllRequest) (*pb.Re
 }
 
 func (s *Server) Get(ctx context.Context, in *pb.GetRequest) (*pb.Reply, error) {
-	i, ok := s.lru.GetItem(in.Key)
-	if ok {
-		return &pb.Reply{Message: "ok", Item: &pb.Item{Key: i.GetKey(), Value: i.GetValue(), Expiration: i.GetExpiration()}}, nil
+	nodeAddress := s.ch.Get(in.Key)
+	if nodeAddress == s.selfAddress {
+		i, ok := s.lru.GetItem(in.Key)
+		if ok {
+			return &pb.Reply{Message: "ok", Item: &pb.Item{Key: i.GetKey(), Value: i.GetValue(), Expiration: i.GetExpiration()}}, nil
+		}
+		return nil, nil
+	} else {
+		return s.client.getItem(nodeAddress, in)
 	}
-	return nil, nil
 }
 
 func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Reply, error) {
