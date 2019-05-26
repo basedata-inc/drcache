@@ -40,6 +40,6 @@ func (c *Client) AddItem(address string, request *pb.AddRequest) (*pb.Reply, err
 	return c.Clients[address].Add(context.Background(), request)
 }
 
-func (c *Client) getItem(address string, request *pb.GetRequest) (*pb.Reply, error) {
+func (c *Client) GetItem(address string, request *pb.GetRequest) (*pb.Reply, error) {
 	return c.Clients[address].Get(context.Background(), request)
 }
