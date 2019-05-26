@@ -47,3 +47,7 @@ func (c *Client) GetItem(address string, request *pb.GetRequest) (*pb.Reply, err
 func (c *Client) SetItem(address string, request *pb.SetRequest) (*pb.Reply, error) {
 	return c.Clients[address].Set(context.Background(), request)
 }
+
+func (c *Client) DeleteItem(address string, request *pb.DeleteRequest) (*pb.Reply, error) {
+	return c.Clients[address].Delete(context.Background(), request)
+}

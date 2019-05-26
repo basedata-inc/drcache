@@ -98,15 +98,24 @@ If entry does not exist, return error.
 If exists deletes the entry
 */
 func (s *Server) Delete(ctx context.Context, in *pb.DeleteRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", in.Key)
-	return &pb.Reply{Message: "ok"}, nil
+	nodeAddress := s.ch.Get(in.Key)
+	if nodeAddress == s.selfAddress {
+		ret := s.lru.Del([]byte(in.Key))
+		if ret {
+			return &pb.Reply{Message: "ok"}, nil
+		}
+		return nil, errors.New("not found")
+
+	} else {
+		return s.client.DeleteItem(nodeAddress, in)
+	}
 }
 
 /*
 flushes all cache
 */
 func (s *Server) DeleteAll(ctx context.Context, in *pb.DeleteAllRequest) (*pb.Reply, error) {
-	log.Printf("Received: %v", "deleteAll")
+	s.lru.Clear()
 	return &pb.Reply{Message: "ok"}, nil
 }
 
