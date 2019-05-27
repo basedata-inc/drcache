@@ -136,7 +136,7 @@ func (s *Server) AddServer(ctx context.Context, in *pb.AddServerRequest) (*pb.Re
 	return nil, nil
 }
 
-func (s *Server) GetServers(ctx context.Context, in *pb.AddServerRequest) (*pb.ServerList, error) {
+func (s *Server) GetServers(ctx context.Context, in *pb.GetServersRequest) (*pb.ServerList, error) {
 	var list []string
 	for address := range s.serverList {
 		list = append(list, address)
