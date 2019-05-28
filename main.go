@@ -1,8 +1,8 @@
 package main
 
 import (
-	dc "drcache/grpc"
 	pb "drcache/grpc/definitions"
+	"drcache/src"
 	"google.golang.org/grpc"
 	"log"
 	"net"
@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	allServers = map[string]struct{}{"localhost:50051": {}, "localhost:50052": {}}
+	allServers = map[string]struct{}{"localhost:50051": {}}
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	drcacheServer := dc.NewServer(allServers, 1024, self)
+	drcacheServer := src.NewServer(allServers, 3, self)
 	grpcServer := grpc.NewServer()
 	pb.RegisterDrcacheServer(grpcServer, drcacheServer)
 	println("Server is started.")
